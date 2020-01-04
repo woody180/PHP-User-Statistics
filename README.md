@@ -10,6 +10,7 @@ See how to provide your location time zone correctly here - https://www.php.net/
 Automatically create two database tables.
 
 -- analytics_users
+
 -- analytics_users_today
 
 ```
