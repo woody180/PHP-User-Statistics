@@ -26,7 +26,7 @@ class Analytics {
         $this->page_link = $actual_link;
     
         // Browser parser
-        $this->wb = new WhichBrowser\Parser(getallheaders());
+        $this->wb = new WhichBrowser\Parser(getallheaders(), [ 'detectBots' => true ]);
 
         // Locations
         $this->loc = new geoPlugin();
@@ -77,6 +77,7 @@ class Analytics {
             $ipaddress = 'UNKNOWN';
 
         return $ipaddress;
+        // return rand();
     }
 
     // Create database dependencies
