@@ -47,7 +47,7 @@ class Analytics {
             date_default_timezone_set($timezone);
         }
         
-        $this->today_date = date("d");
+        $this->today_date = date("j");
     }
 
 
@@ -77,7 +77,6 @@ class Analytics {
             $ipaddress = 'UNKNOWN';
 
         return $ipaddress;
-        // return 221445;
     }
 
     // Create database dependencies
@@ -172,10 +171,10 @@ class Analytics {
                     $month_file = (int)file_get_contents(__DIR__.'/month.txt');
                     if ($month_file != date('n')) {
                         $this->conn->query("UPDATE analytics_users_today SET monthly = 1 WHERE id = 1");
-
+                        
                         // FreeUp datebase from last month data
                         $this->conn->query("DELETE FROM analytics_users WHERE session_date_month = $month_file");
-
+                        
                         // Create month counter file
                         file_put_contents(__DIR__.'/month.txt', date('n'));
 
