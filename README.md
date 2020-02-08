@@ -1,6 +1,6 @@
 ## PHP User Statistics.
 
-Shows user ip, browser, location, today, yesterday and monthly users, device and engine.
+Simple PHP Class. Shows user ip, browser, location, today, yesterday and monthly users, device and engine. Tracks pages viewed by users along with session time
 
 Provide location name for time zone inside configuration as it shown in example below.
 See how to provide your location time zone correctly here - https://www.php.net/manual/en/timezones.php
@@ -9,9 +9,8 @@ See how to provide your location time zone correctly here - https://www.php.net/
 ## Configure and initialize
 Automatically create two database tables.
 
--- analytics_users
-
--- analytics_users_today
+- analytics_users
+- analytics_users_today
 
 ```
 require_once 'analytics/Analytics.php';
