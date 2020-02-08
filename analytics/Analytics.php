@@ -23,7 +23,9 @@ class Analytics {
 
         // Set page link
         $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-        $this->page_link = $actual_link;
+        $this->page_link = filter_var($actual_link, FILTER_SANITIZE_STRING);
+        $this->page_link = filter_var($actual_link, FILTER_VALIDATE_URL);
+        $this->page_link = filter_var($actual_link, FILTER_SANITIZE_URL);
     
         // Browser parser
         $this->wb = new WhichBrowser\Parser(getallheaders(), [ 'detectBots' => true ]);
@@ -254,6 +256,9 @@ class Analytics {
                     }
 
                 }
+
+
+                $this->deb($visited_pages);
 
 
             }
