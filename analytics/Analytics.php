@@ -58,6 +58,12 @@ class Analytics {
     }
 
 
+    private function toJSON($fileArray) {
+        $json = json_encode($fileArray, JSON_PRETTY_PRINT | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);
+        return $json;
+    }
+
+
     // Getting client IP
     private function get_client_ip() {
         $ipaddress = '';
@@ -93,7 +99,7 @@ class Analytics {
             os varchar(100),
             device varchar(100),
             engine varchar(255),
-            visited_pages varchar(255)
+            visited_pages TEXT
         )";
 
         $sql_users_today = "CREATE TABLE analytics_users_today (
@@ -109,6 +115,7 @@ class Analytics {
 
         $this->conn->query("INSERT INTO analytics_users_today (today_date, today, yesterday, monthly) VALUES ($this->today_date, 1, 0, 1)");
 
+        $time = time();
         $this->conn->query("INSERT INTO analytics_users (
             user_ip,
             session_date_day,
@@ -130,7 +137,7 @@ class Analytics {
             '".addslashes($this->wb->os->name)." - ".addslashes($this->wb->os->version->value)."',
             '".addslashes($this->wb->device->type)."',
             '".addslashes($this->wb->engine->name)."',
-            '".addslashes($this->page_link)."'
+            '".addslashes($this->toJSON([$time => $this->page_link]))."'
         )");
 
         // Create month counter file
@@ -202,6 +209,7 @@ class Analytics {
                     $updated_user_count = $this->today_visits += 1;  // Getting today users count and increment by one
                     $monthly_users = $res->monthly += 1;             // Getting monthly users count and increment by one
 
+                    $time = time();
                     $this->conn->query("UPDATE analytics_users_today SET today = '".$updated_user_count."', monthly = '".$monthly_users."'");
                     $this->conn->query("INSERT INTO analytics_users (
                         user_ip,
@@ -224,13 +232,28 @@ class Analytics {
                         '".addslashes($this->wb->os->name)." - ".addslashes($this->wb->os->version->value)."',
                         '".addslashes($this->wb->device->type)."',
                         '".addslashes($this->wb->engine->name)."',
-                        '".addslashes($this->page_link)."'
+                        '".addslashes($this->toJSON([$time => $this->page_link]))."'
                     )");
                 } else {
                     // Update page views
                     $page_views = $user->page_views += 1;
                     $user_id = $user->id;
                     $this->conn->query("UPDATE analytics_users SET page_views = '".$page_views."' WHERE id = '".$user_id."'");
+
+                    // Update visited pages
+                    $res = $this->conn->query("SELECT * FROM analytics_users WHERE user_ip = '".$this->get_client_ip()."'");
+                    $visited_pages = $res->fetch_object()->visited_pages;
+                    $visited_pages = json_decode($visited_pages, true);
+
+                    if (!in_array($this->page_link, $visited_pages)) {
+                        $visited_pages[time()] = $this->page_link;
+                        $json = $this->toJSON($visited_pages);
+                        $ip = $this->get_client_ip();
+
+                        $this->conn->query("UPDATE analytics_users SET visited_pages = '".$json."' WHERE user_ip = '".$ip."'");
+                    }
+
+                    $this->deb($visited_pages);
                 }
 
 
