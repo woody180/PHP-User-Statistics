@@ -238,10 +238,10 @@ class Analytics {
                     // Update page views
                     $page_views = $user->page_views += 1;
                     $user_id = $user->id;
-                    $this->conn->query("UPDATE analytics_users SET page_views = '".$page_views."' WHERE id = '".$user_id."' AND session_date_day = '".$this->today_date."'");
+                    $this->conn->query("UPDATE analytics_users SET page_views = '".$page_views."' WHERE id = '".$user_id."'");
 
                     // Update visited pages
-                    $res = $this->conn->query("SELECT * FROM analytics_users WHERE user_ip = '".$this->get_client_ip()."'");
+                    $res = $this->conn->query("SELECT * FROM analytics_users WHERE user_ip = '".$this->get_client_ip()."' AND session_date_day = '".$this->today_date."'");
                     $visited_pages = $res->fetch_object()->visited_pages;
                     $visited_pages = json_decode($visited_pages, true);
 
