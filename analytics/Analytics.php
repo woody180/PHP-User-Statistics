@@ -253,7 +253,6 @@ class Analytics {
                         $this->conn->query("UPDATE analytics_users SET visited_pages = '".$json."' WHERE user_ip = '".$ip."'");
                     }
 
-                    $this->deb($visited_pages);
                 }
 
 
