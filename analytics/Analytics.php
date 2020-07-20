@@ -259,7 +259,7 @@ class Analytics {
                 }
 
 
-                $this->deb($visited_pages);
+                // $this->deb($visited_pages);
 
 
             }

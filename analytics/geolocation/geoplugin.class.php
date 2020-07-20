@@ -78,8 +78,7 @@ zh-CN
 		global $_SERVER;
 		
 		if ( is_null( $ip ) ) {
-			// $ip = $_SERVER['REMOTE_ADDR'];
-			$ip = "85.114.242.168";
+			$ip = $_SERVER['REMOTE_ADDR'];
 		}
 		
 		$host = str_replace( '{IP}', $ip, $this->host );
@@ -102,7 +101,7 @@ zh-CN
 		$this->countryCode = $data['geoplugin_countryCode'];
 		$this->countryName = $data['geoplugin_countryName'];
 		$this->inEU = $data['geoplugin_inEU'];
-		// $this->euVATrate = $data['euVATrate'];
+		$this->euVATrate = $data['euVATrate'];
 		$this->continentCode = $data['geoplugin_continentCode'];
 		$this->continentName = $data['geoplugin_continentName'];
 		$this->latitude = $data['geoplugin_latitude'];
